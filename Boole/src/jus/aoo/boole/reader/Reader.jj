@@ -1,0 +1,31 @@
+options{STATIC=false;}
+PARSER_BEGIN(Reader)
+
+package jus.aoo.boole.reader;
+import jus.aoo.boole.circuit.*;
+
+public class Reader extends ReaderUtilities {
+	
+public _Circuit read() throws Exception {return DEF_CIRCUIT();}
+}
+PARSER_END(Reader)
+SKIP :{" " |"\r" | "\t" | "\n"}
+TOKEN :{
+ <NUM: ( <DIGIT> )+ > 
+| <ID: <LETTER> (<DIGIT> 
+| <LETTER>)+> | <#LETTER: ["a"-"z","A"-"Z"] > 
+| <#DIGIT: ["0" - "9"] >
+}
+
+ TOKEN :{
+ <DEF_CIRCUIT : "circuit" <ID> <Circuit> >
+| 
+ <Circuit : (<Composant>)+ >
+| 
+ <Composant : "<" <NUM> "|" <ID> ("->" <ConnexionInterne>(";" <ConnexionInterne>)*)">" >
+| 
+ <ConnexionInterne : "#" <NUM> "(" <Connexion> (";"<Connexion>)* ")" >
+| 
+ <Connexion :  <NUM>"#"<NUM> >
+   
+}   
