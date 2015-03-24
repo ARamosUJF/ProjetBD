@@ -7,33 +7,28 @@ public abstract class Composant extends Circuit {
 	protected String nomType;
 	protected int nbEntrees;
 	protected int nbSorties;
-	protected int[] tabE = new int[nbEntrees];
-	protected int[] tabS = new int[nbSorties];
+	protected int[] tabE ;
+	protected int[] tabS ;
 
 	public void calcul(){
 		
 	}
-	
-	public void identifiantComposant() {
-		int j = 0;
-		numComposant++;
-		nomType = "Et";
-		nbSorties = 1;
-		while (j < tabIdComposant.length) {
-			if (tabIdComposant[j] == numComposant) {
-				numComposant++;
-				j = 0;
-			}
-			j++;
-		}
-		for (int i = 0; j < tabIdComposant.length; i++) {
-			if (tabIdComposant[i] != 0) {
-				tabIdComposant[i] = numComposant;
-			}
-		}
+
+	public void assigneid(int id){
+		numComposant = id;
 	}
-	
+
 	public void setNbEntrees(int nb){
 		nbEntrees=nb;
 	}
+	
+	public int valeurS(int indice){
+		return tabS[indice];
+	}
+	
+	public void assigneValeur(int indice, int val){
+		tabE[indice] = val;
+	}
+	
+	
 }

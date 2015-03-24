@@ -1,10 +1,10 @@
 package jus.aoo.boole.composant.elementaire;
 
 public class Itr extends Generateur{
-	public Itr(){
+	public Itr(int id){
 		nomType="Itr";
 		nbSorties=1;
-		identifiantComposant();
+		assigneid(id);
 		afficheValeur();
 	}
 	public void setValeur(int uneValeur){

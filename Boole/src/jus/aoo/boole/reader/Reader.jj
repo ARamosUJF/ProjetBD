@@ -5,27 +5,72 @@ package jus.aoo.boole.reader;
 import jus.aoo.boole.circuit.*;
 
 public class Reader extends ReaderUtilities {
+  public static void main(String args []) throws ParseException
+  {
+    Reader parser = new Reader(System.in);
+//    while (true){
+      System.out.println("Reading from standard input...");
+      System.out.print("Enter an expression like \"1+(2+3)*4;\" :");
+      try
+      {
+		parser.DEF_CIRCUIT();
+		System.out.println("OK.");
+      }
+      catch (Exception e)
+      {
+        System.out.println("NOK.");
+        System.out.println(e.getMessage());
+      }
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+ //       break;
+      }
+    }
+  	public static Circuit read() throws Exception{
+    	Reader parser = new Reader(System.in);
+  	  
+    	return parser.DEF_CIRCUIT();
+	}
 	
-public _Circuit read() throws Exception {return DEF_CIRCUIT();}
-}
+  }
+
 PARSER_END(Reader)
 SKIP :{" " |"\r" | "\t" | "\n"}
+TOKEN [IGNORE_CASE] :
+{
+  <CIRCUIT:"circuit">
+}
 TOKEN :{
- <NUM: ( <DIGIT> )+ > 
-| <ID: <LETTER> (<DIGIT> 
-| <LETTER>)+> | <#LETTER: ["a"-"z","A"-"Z"] > 
+  <NUM: ( <DIGIT> )+ > 
+| <ID: <LETTER> (<DIGIT> | <LETTER>)+>
+| <#LETTER: ["a"-"z","A"-"Z"] > 
 | <#DIGIT: ["0" - "9"] >
 }
 
- TOKEN :{
- <DEF_CIRCUIT : "circuit" <ID> <Circuit> >
-| 
- <Circuit : (<Composant>)+ >
-| 
- <Composant : "<" <NUM> "|" <ID> ("->" <ConnexionInterne>(";" <ConnexionInterne>)*)">" >
-| 
- <ConnexionInterne : "#" <NUM> "(" <Connexion> (";"<Connexion>)* ")" >
-| 
- <Connexion :  <NUM>"#"<NUM> >
-   
-}   
+
+TOKEN :{
+  <DIESE:"#">
+| <PARO:"("> | <PARF:")">
+| <FLECHE:"->">
+}
+
+
+
+Circuit DEF_CIRCUIT() :{Circuit c=new Circuit();Token t;}{
+  (<CIRCUIT> t=<ID> c=CIRCUIT())? "."{return c;}}
+
+Circuit CIRCUIT():{Circuit c=new Circuit();}{  (DEF_COMPOSANT())+{return c;}
+}
+
+void DEF_COMPOSANT():{}{
+  "<" <NUM> "|" <ID> (<FLECHE> DEF_CONNEXION_INTERNE()(";" DEF_CONNEXION_INTERNE())*)?">"
+}
+
+void DEF_CONNEXION_INTERNE():{}{	<DIESE> <NUM> <PARO> DEF_CONNEXION() (";"DEF_CONNEXION())* <PARF>
+}
+
+void DEF_CONNEXION():{Token t1, t2;}{
+	t1=<NUM> <DIESE> t2=<NUM>{int cs = Integer.parseInt(t1);}
+}        
